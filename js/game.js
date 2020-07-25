@@ -20,6 +20,7 @@ var heightStage = 10;
 var soundWin;
 var soundDead;
 var music;
+var lvl;
 music= new Howl({
 	src:['music/snitch.wav'],
 	loop: true
@@ -49,14 +50,14 @@ var stages = [[1,[
 
 ]], [2,[
 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-[0,1,2,0,0,0,2,2,2,2,0,0,2,2,0],
-[0,0,2,2,2,2,2,2,0,2,0,0,2,2,0],
-[0,0,2,0,0,2,2,2,0,2,2,2,2,2,0],
+[0,2,0,0,0,0,2,2,2,2,0,0,2,1,0],
+[0,2,2,2,2,2,2,2,0,2,0,0,2,2,0],
+[0,2,2,0,0,2,2,2,0,2,2,2,2,2,0],
 [0,0,2,2,2,0,2,2,0,0,2,2,2,0,0],
 [0,2,2,0,0,0,0,2,0,0,0,2,0,0,0],
-[0,0,2,0,0,0,2,2,2,0,0,2,2,2,0],
-[0,2,2,2,0,0,2,0,0,2,2,2,2,2,0],
-[0,2,2,2,0,0,3,0,0,2,2,2,2,2,0],
+[0,2,0,2,2,2,2,0,3,0,0,2,2,2,0],
+[0,2,0,2,0,0,2,0,2,0,2,2,2,2,0],
+[0,2,2,2,0,0,2,2,2,0,0,0,0,0,0],
 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
 
 ]
@@ -70,15 +71,85 @@ var newDiv;
 var buttonNext;
 
 
-function drawStage(){
+
+function startGame(){
+
+	protagonist = new player();
+	document.getElementById('ini').remove();
+	music.play();
+	lvl=1;
+	canvas = document.getElementById('canvas');
+	document.getElementById('canvas').style.display = 'block';
+	ctx = canvas.getContext('2d');
+
+	tilemap=new Image();
+	tilemap.src='img/tilemap2.png';
+	
+	initialization();
+}
+
+function createEnemy(){
+	enemy.push(new bad(Math.floor(Math.random() * 8)+2,Math.floor(Math.random() * 13)+2));
+}
+function initialization(){
+
+createEnemy();
+
+	
+	document.addEventListener('keydown',function(keyb){
+	    //console.log(keyb.keyCode); know the Code of keys
+
+	    if(keyb.keyCode == 87){
+	    	protagonist.up();
+
+	    }
+	    if(keyb.keyCode == 83){
+	    	protagonist.down();
+	    }
+	    if(keyb.keyCode == 65){
+	    	protagonist.left();
+	    }
+	    if(keyb.keyCode == 68){
+	    	protagonist.rigth();
+	    }
+	})
+
+
+	setInterval(function(){
+		principal();
+	},1000/FPS);
+}
+
+function principal(){
+	document.getElementById("boardLvl").innerHTML="lvl: "+lvl+"position x:  "+
+	protagonist.x+"y: "+protagonist.y;
+	deleteCanvas();
+	drawStage();
+	protagonist.draw();
+
+	for(c=0; c<enemy.length; c++){
+		enemy[c].move();
+		enemy[c].draw();
+	}
+
+
+}
+
+
+function selectStage(){
 
 	if(lvl==1){
 		stage=map.get(1);
 
-	}if(lvl==2){
+	}else if(lvl==2){
 		stage=map.get(2);
 
 	}
+	return stage;
+}
+
+function drawStage(){
+  stage=selectStage();
 	for(y=0; y<heightStage; y++){
 		for(x=0; x<widthStage; x++){
 			
@@ -93,18 +164,11 @@ function drawStage(){
 	}
 }
 
-function startGame(){
-	var divIni = document.getElementById('ini');
-	divIni.remove();
-	music.play();
-	lvl=1;
-	document.getElementById('canvas').style.display = 'block';
-	initialization();
-}
 
 
 
 var bad=function(x,y){
+	 stage=selectStage();
 	this.x=x;
 	this.y=y;
 	this.direction=Math.floor(Math.random()*4);
@@ -170,10 +234,9 @@ var bad=function(x,y){
 }
 
 var player = function(){
-
+ stage=selectStage();
 	this.x=2;
 	this.y=1;
-	this.color='#57007FFF';
 	this.key=false;
 
 	this.draw=function(){
@@ -219,17 +282,14 @@ var player = function(){
 	}
 	this.victory= function(){
 		soundWin.play();
-		console.log("Has ganado!!");
 		document.getElementById('canvas').style.display = 'none';
+		deleteCanvas();
 		newDiv = document.createElement("div"); 
 		buttonNext = document.createElement("button");
-		
 		buttonNext.innerText = 'Haz Click';
 		buttonNext.onclick = function(){
 			newDiv.remove();
-			alert("hola");
 			document.getElementById('canvas').style.display = 'block';
-			initialization();
 		};
 
 		var newContent = document.createTextNode("Has ganado!!"); 
@@ -243,7 +303,8 @@ var player = function(){
 
 	this.dead= function(){
 		soundDead.play();
-		console.log("Has perdido!!");
+		alert("Has perdido!!");
+		stage=selectStage();
 		this.x=1;
 		this.y=1;
 		this.key=false;
@@ -251,6 +312,7 @@ var player = function(){
 	}
 
 	this.objectsLogic = function(){
+		stage=selectStage();
 		var object = stage[this.y][this.x];
 		if(object==3){
 			this.key=true;
@@ -282,43 +344,7 @@ var player = function(){
 
 
 
-function initialization(){
-	canvas = document.getElementById('canvas');
-	ctx = canvas.getContext('2d');
 
-
-	tilemap=new Image();
-	tilemap.src='img/tilemap2.png';
-
-
-	protagonist = new player();
-
-	enemy.push(new bad(Math.floor(Math.random() * 8)+2,Math.floor(Math.random() * 13)+2));
-	enemy.push(new bad(Math.floor(Math.random() * 8)+2,Math.floor(Math.random() * 13)+2));
-	enemy.push(new bad(Math.floor(Math.random() * 8)+2,Math.floor(Math.random() * 13)+2));
-
-	document.addEventListener('keydown',function(keyb){
-	    //console.log(keyb.keyCode); know the Code of keys
-
-	    if(keyb.keyCode == 87){
-	    	protagonist.up();
-	    }
-	    if(keyb.keyCode == 83){
-	    	protagonist.down();
-	    }
-	    if(keyb.keyCode == 65){
-	    	protagonist.left();
-	    }
-	    if(keyb.keyCode == 68){
-	    	protagonist.rigth();
-	    }
-	})
-
-
-	setInterval(function(){
-		principal();
-	},1000/FPS);
-}
 
 
 
@@ -328,15 +354,3 @@ function deleteCanvas(){
 	canvas.height=500;
 }
 
-function principal(){
-	deleteCanvas();
-	drawStage();
-	protagonist.draw();
-
-	for(c=0; c<enemy.length; c++){
-		enemy[c].move();
-		enemy[c].draw();
-	}
-
-
-}
