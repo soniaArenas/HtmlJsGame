@@ -14,25 +14,57 @@ var protagonist;
 var tilemap;
 var enemy=[];
 
+var widthStage = 25;
+var heightStage = 20; 
+
+var soundWin;
+var soundDead;
+var music;
+music= new Howl({
+	src:['music/snitch.wav'],
+	loop: true
+});
+soundWin = new Howl({
+	src:['sound/orchestra.wav'],
+	loop: false
+});
+soundDead= new Howl({
+	src:['sound/gameOver.wav'],
+	loop: false
+});
+
+
 
 var stage = [
-[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-[0,2,2,0,0,0,2,2,2,2,0,0,2,2,0],
-[0,0,2,2,2,2,2,0,0,2,0,0,2,0,0],
-[0,0,2,0,0,0,2,2,0,2,2,2,2,0,0],
-[0,0,2,2,2,0,0,2,0,0,0,2,0,0,0],
-[0,2,2,0,0,0,0,2,0,0,0,2,0,0,0],
-[0,0,2,0,0,0,2,2,2,0,0,2,2,2,0],
-[0,2,2,2,0,0,2,0,0,0,1,0,0,2,0],
-[0,2,2,3,0,0,2,0,0,2,2,2,2,2,0],
-[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-]
+  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+  [0,2,2,0,0,0,2,2,2,2,0,0,2,2,2,2,2,2,2,2,2,2,2,2,0],
+  [0,0,2,2,2,2,2,2,0,2,0,0,2,2,0,0,0,2,0,0,2,0,0,0,0],
+  [0,0,2,0,0,2,2,2,0,2,2,2,2,2,0,0,0,0,0,0,2,2,2,0,0],
+  [0,0,2,2,2,0,2,2,0,0,2,2,2,0,0,0,2,2,2,2,2,0,2,0,0],
+  [0,2,2,0,0,0,0,2,0,0,0,2,0,0,0,0,2,0,0,2,0,0,2,0,0],
+  [0,0,2,0,0,0,2,2,2,0,0,2,2,2,0,0,2,0,0,0,0,0,2,0,0],
+  [0,2,2,2,0,0,2,0,0,2,2,2,2,2,2,2,2,0,0,2,2,0,2,0,0],
+  [0,2,2,3,0,0,2,0,0,1,2,2,2,2,0,0,0,0,2,2,2,2,2,0,0],
+  [0,2,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,2,0,0,0],
+  [0,2,2,2,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,2,0,0,0],
+  [0,2,0,2,2,2,0,0,0,0,0,2,2,2,2,0,0,0,0,0,2,2,2,0,0],
+  [0,2,0,2,2,2,0,0,0,0,0,2,0,0,2,0,0,0,0,0,2,2,2,0,0],
+  [0,2,0,0,0,2,0,0,0,0,0,2,0,0,2,0,0,0,0,0,0,2,0,0,0],
+  [0,2,0,0,0,2,0,0,0,0,0,2,0,0,2,2,0,0,2,0,0,2,0,0,0],
+  [0,2,2,2,0,2,0,0,0,0,0,2,0,0,2,2,0,0,2,0,0,2,0,0,0],
+  [0,2,0,2,0,0,0,0,0,0,0,2,0,0,2,2,0,0,2,0,0,2,0,0,0],
+  [0,0,0,2,0,0,0,0,0,0,0,2,0,0,0,2,2,2,2,0,0,2,0,0,0],
+  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+];
+
+
 
 
 function drawStage(){
 
-	for(y=0; y<10; y++){
-		for(x=0; x<15; x++){
+	for(y=0; y<heightStage; y++){
+		for(x=0; x<widthStage; x++){
 			
 			var tile= stage[y][x];
 			/*ctx.fillStyle = color;
@@ -41,8 +73,19 @@ function drawStage(){
 			*/
 			ctx.drawImage(tilemap,tile*101,0,101,118,widthF*x,heightF*y,widthF,heightF);
 		}
+
 	}
 }
+
+function startGame(){
+	  var divIni = document.getElementById('ini');
+	divIni.remove();
+	music.play();
+	
+	document.getElementById('canvas').style.display = 'block';
+	initialization();
+}
+
 
 var bad=function(x,y){
 	this.x=x;
@@ -158,6 +201,7 @@ var player = function(){
 		
 	}
 	this.victory= function(){
+		soundWin.play();
 		console.log("Has ganado!!");
 		this.x=1;
 		this.y=1;
@@ -166,6 +210,7 @@ var player = function(){
 	}
 
 	this.dead= function(){
+		soundDead.play();
 		console.log("Has perdido!!");
 		this.x=1;
 		this.y=1;
@@ -208,6 +253,7 @@ this.enemyCollision = function(x,y){
 function initialization(){
 	canvas = document.getElementById('canvas');
 	ctx = canvas.getContext('2d');
+
 
 	tilemap=new Image();
 	tilemap.src='img/tilemap2.png';
@@ -259,5 +305,6 @@ function principal(){
 		enemy[c].move();
 		enemy[c].draw();
 	}
+
 
 }

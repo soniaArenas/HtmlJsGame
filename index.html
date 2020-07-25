@@ -3,13 +3,22 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Juego</title>
+	<link rel="stylesheet" href="style/style.css">
+	<script src="js/howler.core.js"></script>
 	<script src="js/keypress.js"></script>
 	<script src="js/game.js"></script>
 
+
+
 </head>
-<body onload="initialization();">
+<body>
+	<div id="ini">
+		<h1>Bienvenid@!</h1>
+		<h2>¿Quiere comenzar tu aventura?</h2>
+		<button id="startGame" onclick="startGame();">¡Empecemos!</button>
+	</div>
 	
-	<canvas id="canvas" width="750" height="500" style="border: 2px solid red"></canvas>
+	<canvas id="canvas"></canvas>
 
 </body>
 </html>

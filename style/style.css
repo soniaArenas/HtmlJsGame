@@ -1,0 +1,20 @@
+body{
+	overflow: hidden;
+	background: rgb(2,0,36);
+    background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,121,41,1) 35%, rgba(0,212,255,1) 70%);
+}
+#ini{
+	width: 90%;
+	border-radius: 5px;
+	margin:20% auto;	
+	text-align: center;
+	background-color: #2A23DB66;
+}
+
+
+#canvas{
+	display: none;
+    width: 750px;
+    height:500px;
+    border: 2px solid red;
+}
