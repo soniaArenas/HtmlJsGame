@@ -14,8 +14,8 @@ var protagonist;
 var tilemap;
 var enemy=[];
 
-var widthStage = 25;
-var heightStage = 20; 
+var widthStage = 15;
+var heightStage = 10; 
 
 var soundWin;
 var soundDead;
@@ -35,34 +35,50 @@ soundDead= new Howl({
 
 
 
-var stage = [
-  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-  [0,2,2,0,0,0,2,2,2,2,0,0,2,2,2,2,2,2,2,2,2,2,2,2,0],
-  [0,0,2,2,2,2,2,2,0,2,0,0,2,2,0,0,0,2,0,0,2,0,0,0,0],
-  [0,0,2,0,0,2,2,2,0,2,2,2,2,2,0,0,0,0,0,0,2,2,2,0,0],
-  [0,0,2,2,2,0,2,2,0,0,2,2,2,0,0,0,2,2,2,2,2,0,2,0,0],
-  [0,2,2,0,0,0,0,2,0,0,0,2,0,0,0,0,2,0,0,2,0,0,2,0,0],
-  [0,0,2,0,0,0,2,2,2,0,0,2,2,2,0,0,2,0,0,0,0,0,2,0,0],
-  [0,2,2,2,0,0,2,0,0,2,2,2,2,2,2,2,2,0,0,2,2,0,2,0,0],
-  [0,2,2,3,0,0,2,0,0,1,2,2,2,2,0,0,0,0,2,2,2,2,2,0,0],
-  [0,2,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,2,0,0,0],
-  [0,2,2,2,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,2,0,0,0],
-  [0,2,0,2,2,2,0,0,0,0,0,2,2,2,2,0,0,0,0,0,2,2,2,0,0],
-  [0,2,0,2,2,2,0,0,0,0,0,2,0,0,2,0,0,0,0,0,2,2,2,0,0],
-  [0,2,0,0,0,2,0,0,0,0,0,2,0,0,2,0,0,0,0,0,0,2,0,0,0],
-  [0,2,0,0,0,2,0,0,0,0,0,2,0,0,2,2,0,0,2,0,0,2,0,0,0],
-  [0,2,2,2,0,2,0,0,0,0,0,2,0,0,2,2,0,0,2,0,0,2,0,0,0],
-  [0,2,0,2,0,0,0,0,0,0,0,2,0,0,2,2,0,0,2,0,0,2,0,0,0],
-  [0,0,0,2,0,0,0,0,0,0,0,2,0,0,0,2,2,2,2,0,0,2,0,0,0],
-  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-];
+var stages = [[1,[
+[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+[0,2,2,0,0,0,2,2,2,2,0,0,2,2,0],
+[0,0,2,2,2,2,2,2,0,2,0,0,2,2,0],
+[0,0,2,0,0,2,2,2,0,2,2,2,2,2,0],
+[0,0,2,2,2,0,2,2,0,0,2,2,2,0,0],
+[0,2,2,0,0,0,0,2,0,0,0,2,0,0,0],
+[0,0,2,0,0,0,2,2,2,0,0,2,2,2,0],
+[0,2,2,2,0,0,2,0,0,2,2,2,2,2,0],
+[0,2,2,3,0,0,2,0,0,1,2,2,2,2,0],
+[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
 
+]], [2,[
+[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+[0,1,2,0,0,0,2,2,2,2,0,0,2,2,0],
+[0,0,2,2,2,2,2,2,0,2,0,0,2,2,0],
+[0,0,2,0,0,2,2,2,0,2,2,2,2,2,0],
+[0,0,2,2,2,0,2,2,0,0,2,2,2,0,0],
+[0,2,2,0,0,0,0,2,0,0,0,2,0,0,0],
+[0,0,2,0,0,0,2,2,2,0,0,2,2,2,0],
+[0,2,2,2,0,0,2,0,0,2,2,2,2,2,0],
+[0,2,2,2,0,0,3,0,0,2,2,2,2,2,0],
+[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
 
+]
+]];
+
+var map = new Map(stages);
+
+var stage;
+
+var newDiv;
+var buttonNext;
 
 
 function drawStage(){
 
+	if(lvl==1){
+		stage=map.get(1);
+
+	}if(lvl==2){
+		stage=map.get(2);
+
+	}
 	for(y=0; y<heightStage; y++){
 		for(x=0; x<widthStage; x++){
 			
@@ -78,13 +94,14 @@ function drawStage(){
 }
 
 function startGame(){
-	  var divIni = document.getElementById('ini');
+	var divIni = document.getElementById('ini');
 	divIni.remove();
 	music.play();
-	
+	lvl=1;
 	document.getElementById('canvas').style.display = 'block';
 	initialization();
 }
+
 
 
 var bad=function(x,y){
@@ -110,7 +127,7 @@ var bad=function(x,y){
 
 	this.move = function(){
 
-protagonist.enemyCollision(this.x, this.y);
+		protagonist.enemyCollision(this.x, this.y);
 
 		if(this.counter < this.delayEnemy){
 
@@ -203,10 +220,25 @@ var player = function(){
 	this.victory= function(){
 		soundWin.play();
 		console.log("Has ganado!!");
-		this.x=1;
-		this.y=1;
-		this.key=false;
-		stage[8][3]=3;
+		document.getElementById('canvas').style.display = 'none';
+		newDiv = document.createElement("div"); 
+		buttonNext = document.createElement("button");
+		
+		buttonNext.innerText = 'Haz Click';
+		buttonNext.onclick = function(){
+			newDiv.remove();
+			alert("hola");
+			document.getElementById('canvas').style.display = 'block';
+			initialization();
+		};
+
+		var newContent = document.createTextNode("Has ganado!!"); 
+		newDiv.appendChild(newContent); 
+		newDiv.appendChild(buttonNext);  
+		document.body.appendChild(newDiv);  
+
+		lvl++;
+		
 	}
 
 	this.dead= function(){
@@ -235,14 +267,14 @@ var player = function(){
 		}
 	}
 
-this.enemyCollision = function(x,y){
+	this.enemyCollision = function(x,y){
 
-	if(this.x == x && this.y == y){
+		if(this.x == x && this.y == y){
 
-		this.dead();
+			this.dead();
 
+		}
 	}
-}
 	
 
 }
@@ -261,9 +293,9 @@ function initialization(){
 
 	protagonist = new player();
 
-	enemy.push(new bad(3,3));
-	enemy.push(new bad(12,5));
-	enemy.push(new bad(7,1));
+	enemy.push(new bad(Math.floor(Math.random() * 8)+2,Math.floor(Math.random() * 13)+2));
+	enemy.push(new bad(Math.floor(Math.random() * 8)+2,Math.floor(Math.random() * 13)+2));
+	enemy.push(new bad(Math.floor(Math.random() * 8)+2,Math.floor(Math.random() * 13)+2));
 
 	document.addEventListener('keydown',function(keyb){
 	    //console.log(keyb.keyCode); know the Code of keys
