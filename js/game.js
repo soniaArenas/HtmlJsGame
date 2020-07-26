@@ -50,14 +50,14 @@ var stages = [[1,[
 
 ]], [2,[
 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-[0,2,0,0,0,0,2,2,2,2,0,0,2,1,0],
+[0,3,0,0,0,0,2,2,2,2,0,0,2,1,0],
 [0,2,2,2,2,2,2,2,0,2,0,0,2,2,0],
 [0,2,2,0,0,2,2,2,0,2,2,2,2,2,0],
 [0,0,2,2,2,0,2,2,0,0,2,2,2,0,0],
 [0,2,2,0,0,0,0,2,0,0,0,2,0,0,0],
-[0,2,0,2,2,2,2,0,3,0,0,2,2,2,0],
+[0,2,0,2,2,2,2,0,2,0,0,2,2,2,0],
 [0,2,0,2,0,0,2,0,2,0,2,2,2,2,0],
-[0,2,2,2,0,0,2,2,2,0,0,0,0,0,0],
+[0,2,2,2,0,0,2,2,2,2,0,0,0,0,0],
 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
 
 ]
@@ -74,7 +74,7 @@ var buttonNext;
 
 function startGame(){
 
-	protagonist = new player();
+	
 	document.getElementById('ini').remove();
 	music.play();
 	lvl=1;
@@ -88,13 +88,12 @@ function startGame(){
 	initialization();
 }
 
-function createEnemy(){
-	enemy.push(new bad(Math.floor(Math.random() * 8)+2,Math.floor(Math.random() * 13)+2));
-}
+
+
 function initialization(){
 
-createEnemy();
 
+	protagonist = new player();
 	
 	document.addEventListener('keydown',function(keyb){
 	    //console.log(keyb.keyCode); know the Code of keys
@@ -114,26 +113,62 @@ createEnemy();
 	    }
 	})
 
+	newLvl();
+	
+}
+function createEnemy(){
+	alert("debo crear"+(lvl+2)+" enemigos para nivel"+ lvl);
+	var i=0;
+	for ( i = 0; i < (lvl+2); i++) {
+		//enemy.push(new bad(Math.floor(Math.random() * 8)+2,Math.floor(Math.random() * 13)+2));
+		y=Math.floor(Math.random() * 8)+2;
+		x=Math.floor(Math.random() * 13)+2;
+		enemyB=new bad(x,y);
+		var valorMapa=stage[y][x];
+		alert("enemigo creado en x: "+ x+" y: "+y+" el valor es :"+ valorMapa);
 
+
+		if(stage[y][x]==2){
+			enemy.push(enemyB);
+		}else {
+			i--;
+		}
+
+	}
+	
+
+}
+
+function killEnemy(){
+	enemy=[];
+}
+function newLvl(){
+	
 	setInterval(function(){
 		principal();
 	},1000/FPS);
+
+	createEnemy();
+
 }
 
 function principal(){
-	document.getElementById("boardLvl").innerHTML="lvl: "+lvl+"position x:  "+
-	protagonist.x+"y: "+protagonist.y;
+
 	deleteCanvas();
 	drawStage();
+	
 	protagonist.draw();
 
 	for(c=0; c<enemy.length; c++){
 		enemy[c].move();
 		enemy[c].draw();
 	}
-
-
+	document.getElementById("boardLvl").innerHTML="lvl: "+lvl+"position x:  "+
+	protagonist.x+"y: "+protagonist.y;
 }
+
+
+
 
 
 function selectStage(){
@@ -149,7 +184,7 @@ function selectStage(){
 }
 
 function drawStage(){
-  stage=selectStage();
+	stage=selectStage();
 	for(y=0; y<heightStage; y++){
 		for(x=0; x<widthStage; x++){
 			
@@ -168,7 +203,7 @@ function drawStage(){
 
 
 var bad=function(x,y){
-	 stage=selectStage();
+	stage=selectStage();
 	this.x=x;
 	this.y=y;
 	this.direction=Math.floor(Math.random()*4);
@@ -234,7 +269,7 @@ var bad=function(x,y){
 }
 
 var player = function(){
- stage=selectStage();
+	stage=selectStage();
 	this.x=2;
 	this.y=1;
 	this.key=false;
@@ -284,31 +319,17 @@ var player = function(){
 		soundWin.play();
 		document.getElementById('canvas').style.display = 'none';
 		deleteCanvas();
-		newDiv = document.createElement("div"); 
-		buttonNext = document.createElement("button");
-		buttonNext.innerText = 'Haz Click';
-		buttonNext.onclick = function(){
-			newDiv.remove();
-			document.getElementById('canvas').style.display = 'block';
-		};
-
-		var newContent = document.createTextNode("Has ganado!!"); 
-		newDiv.appendChild(newContent); 
-		newDiv.appendChild(buttonNext);  
-		document.body.appendChild(newDiv);  
-
 		lvl++;
+		createDivNextLvl();
+		newLvl();
 		
 	}
 
 	this.dead= function(){
 		soundDead.play();
 		alert("Has perdido!!");
-		stage=selectStage();
-		this.x=1;
-		this.y=1;
-		this.key=false;
-		stage[8][3]=3;
+killEnemy();
+		newLvl();
 	}
 
 	this.objectsLogic = function(){
@@ -343,7 +364,20 @@ var player = function(){
 
 
 
+function createDivNextLvl(){
+	newDiv = document.createElement("div"); 
+	buttonNext = document.createElement("button");
+	buttonNext.innerText = 'Haz Click';
+	buttonNext.onclick = function(){
+		newDiv.remove();
+		document.getElementById('canvas').style.display = 'block';
+	};
 
+	var newContent = document.createTextNode("Has ganado!!"); 
+	newDiv.appendChild(newContent); 
+	newDiv.appendChild(buttonNext);  
+	document.body.appendChild(newDiv); 
+}
 
 
 
