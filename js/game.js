@@ -19,7 +19,7 @@ var heightStage = 10;
 
 var soundWin;
 var soundDead;
-var music;
+var music; 
 var lvl;
 music= new Howl({
 	src:['music/snitch.wav'],
@@ -99,7 +99,7 @@ var stage;
 var newDiv;
 var buttonNext;
 
-var newDivDead;
+var newDiv;
 
 var principalTime;
 
@@ -152,11 +152,7 @@ function initialization(){
 function newLvl(){
 	protagonist = new player(iniPositionX,iniPositionY);
 	createEnemy();
-
-	
-/*	setInterval(function(){
-		principal();
-	},1000/FPS);*/
+	deleteKeyOnInventory();
 	setKey();
 	principalTime= setInterval(principal,1000/FPS);
 	
@@ -169,12 +165,10 @@ function createEnemy(){
 	console.log("debo crear"+(lvl+2)+" enemigos para nivel"+ lvl);
 	var i=0;
 	for ( i = 0; i < (lvl+2); i++) {
-		//enemy.push(new bad(Math.floor(Math.random() * 8)+2,Math.floor(Math.random() * 13)+2));
 		y=Math.floor(Math.random() * 8)+2;
 		x=Math.floor(Math.random() * 13)+2;
 		enemyB=new bad(x,y);
 		var valorMapa=stage[y][x];
-
 
 		if(stage[y][x]==2){
 			enemy.push(enemyB);
@@ -190,7 +184,6 @@ function createEnemy(){
 
 function killEnemy(){
 	enemy=[];
-	console.log("enemigos muertos, ahora"+enemy.length);
 }
 
 
@@ -214,7 +207,6 @@ function setKey(){
 
 
 function principal(){
-	console.log("Estoy iniciado");
 	deleteCanvas();
 	drawStage();
 	
@@ -247,14 +239,6 @@ function selectStage(){
 		break;
 
 	}
-
-/*	if(lvl==1){
-		stage=map.get(1);
-
-	}else if(lvl==2){
-		stage=map.get(2);
-
-	}*/
 	return stage;
 }
 
@@ -264,10 +248,6 @@ function drawStage(){
 		for(x=0; x<widthStage; x++){
 			
 			var tile= stage[y][x];
-			/*ctx.fillStyle = color;
-			ctx.fillRect(x*widthF, y*heightF, widthF,heightF);
-
-			*/
 			ctx.drawImage(tilemap,tile*101,0,101,118,widthF*x,heightF*y,widthF,heightF);
 		}
 
@@ -285,7 +265,6 @@ var bad=function(x,y){
 	this.delayEnemy=50;
 	this.counter=0;
 	
-	console.log("enemigo creado");
 	this.draw=function(){
 		//ctx.fillStyle = this.color;
 		ctx.drawImage(tilemap,199,127,101,118,this.x*widthF, this.y*heightF, widthF,heightF);
@@ -436,18 +415,21 @@ var player = function(x,y){
 }
 
 function putKeyOnInventory(){
-	document.getElementById('inventory').innerHTML='<img src="img/key.png" id"imgKey" style="width:50px; height:50px;" />';
+	document.getElementById('inventory').innerHTML='<img src="img/key.png" id="imgKey" style="width:50px; height:50px;" />';
 }
 function deleteKeyOnInventory(){
-	document.getElementById('imgKey').style.display='none';
+	if(document.getElementById('imgKey')) {
+  document.getElementById('imgKey').style.display='none';
 }
+}
+	
 
 function forcePauseGame(){
-clearInterval(principalTime);
-		console.log("intervalo parado");
-		killEnemy();
-		protagonist.key=false;
-		document.getElementById('canvas').style.display = 'none';
+	clearInterval(principalTime);
+	console.log("intervalo parado");
+	killEnemy();
+	protagonist.key=false;
+	document.getElementById('canvas').style.display = 'none';
 }
 
 function setNewLvl(){
@@ -458,40 +440,38 @@ function setNewLvl(){
 }
 
 function createDivNextLvl(){
-	newDiv = document.createElement("div"); 
-	newDiv.setAttribute("class", "divNew");
-	buttonNext = document.createElement("button");
-	buttonNext.innerText = 'Haz Click';
+	var result=createNewDiv("Has ganado!!!!!");
 	buttonNext.onclick = function(){
 		newDiv.remove();
 		newLvl();
 		document.getElementById('canvas').style.display = 'block';
 	};
-document.getElementById('divNew').innerHTML='<p id"pWin"> Has Ganado! <p/>';
-	/*var newContent = document.createTextNode("Has ganado!!"); 
-	newDiv.appendChild(newContent); */
-	newDiv.appendChild(buttonNext);  
-	document.body.appendChild(newDiv); 
+	
 }
-
 function createDivDead(){
-	newDivDead=document.createElement("div"); 
-	newDivDead.setAttribute("class", "divNew");
-	buttonNext = document.createElement("button");
-	buttonNext.innerText = 'Haz Click';
+var result=createNewDiv("Has muerto!!!");
+
 	buttonNext.onclick = function(){
-		newDivDead.remove();
+		newDiv.remove();
 		newLvl();
 		document.getElementById('canvas').style.display = 'block';
 	};
-document.getElementByClassName('newDivDead').innerHTML='<p id"pDead"> Has Murerto! <p/>';
-
-/*	var newContent = document.createTextNode("Has muerto!!"); 
-	newDivDead.appendChild(newContent); */
-	newDivDead.appendChild(buttonNext);  
-	document.body.appendChild(newDivDead); 
+	
 }
 
+function createNewDiv(state){
+	newDiv=document.createElement("div"); 
+	newDiv.setAttribute("class", "divNew");
+	buttonNext = document.createElement("button");
+	buttonNext.innerText = 'Haz Click';
+	newDiv.appendChild(buttonNext);  
+	var newH2= document.createElement("H2");
+	var newText = document.createTextNode(state);
+	newH2.appendChild(newText);
+	newDiv.appendChild(newH2);
+	document.body.appendChild(newDiv); 
+	return newDiv;
+}
 
 
 function deleteCanvas(){
