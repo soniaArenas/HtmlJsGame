@@ -58,7 +58,7 @@ var stages = [
 [0,2,2,0,0,2,2,2,0,2,2,2,2,2,0],
 [0,0,2,2,2,0,2,2,0,0,2,2,2,0,0],
 [0,2,2,0,0,0,0,2,0,0,0,2,0,0,0],
-[0,2,0,2,2,2,2,0,2,0,0,2,2,2,0],
+[0,2,0,2,2,2,2,0,2,0,2,2,2,2,0],
 [0,2,0,2,0,0,2,0,2,0,2,2,2,2,0],
 [0,2,2,2,0,0,2,2,2,2,0,0,0,0,0],
 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
@@ -66,20 +66,20 @@ var stages = [
 ]],
 [3,[
 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-[0,3,0,0,0,0,2,2,2,2,0,0,2,1,0],
-[0,2,2,2,2,2,2,2,0,2,0,0,2,2,0],
-[0,2,2,0,0,2,2,2,0,2,2,2,2,2,0],
-[0,0,2,2,2,0,2,2,0,0,2,2,2,0,0],
-[0,2,2,0,0,0,0,2,0,0,0,2,0,0,0],
-[0,2,0,2,2,2,2,0,2,0,0,2,2,2,0],
-[0,2,0,2,0,0,2,0,2,0,2,2,2,2,0],
-[0,2,2,2,0,0,2,2,2,2,0,0,0,0,0],
+[0,0,0,0,0,2,2,2,0,2,2,2,2,2,0],
+[0,0,1,0,0,2,0,2,0,2,0,0,0,0,0],
+[0,0,2,0,0,2,0,2,0,2,2,2,0,0,0],
+[0,2,2,0,0,2,0,2,0,0,0,2,2,0,0],
+[0,2,0,0,0,2,0,2,2,2,2,0,2,0,0],
+[0,2,0,2,2,2,0,0,0,0,2,0,2,2,0],
+[0,2,0,2,0,0,0,0,0,0,2,0,0,2,0],
+[0,2,2,2,0,0,0,0,0,0,2,2,2,3,0],
 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
 
 ]],
 [4,[
 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-[0,3,0,0,0,0,2,2,2,2,0,0,2,1,0],
+[0,0,0,0,0,0,2,2,2,2,0,0,2,1,0],
 [0,2,2,2,2,2,2,2,0,2,0,0,2,2,0],
 [0,2,2,0,0,2,2,2,0,2,2,2,2,2,0],
 [0,0,2,2,2,0,2,2,0,0,2,2,2,0,0],
@@ -117,6 +117,7 @@ function startGame(){
 	tilemap.src='img/tilemap2.png';
 	
 	initialization();
+	document.getElementById('star').style.visibility = 'visible';
 }
 
 
@@ -202,7 +203,7 @@ function setKey(){
 		stage[1][1]=3;
 		break;
 		case 3:
-		stage[1][1]=3;
+		stage[8][13]=3;
 		break;
 		case 4:
 		stage[1][1]=3;
@@ -223,8 +224,7 @@ function principal(){
 		enemy[c].move();
 		enemy[c].draw();
 	}
-	document.getElementById("boardLvl").innerHTML="lvl: "+lvl+"position x:  "+
-	protagonist.x+"y: "+protagonist.y;
+	document.getElementById("txtLvl2").innerHTML=lvl;
 }
 
 
@@ -411,6 +411,7 @@ var player = function(x,y){
 			this.key=true;
 			stage[this.y][this.x]=2;
 			console.log("Has obtenido la llave!!!!");
+			putKeyOnInventory();
 
 		}
 		if(object==1){
@@ -434,6 +435,13 @@ var player = function(x,y){
 
 }
 
+function putKeyOnInventory(){
+	document.getElementById('inventory').innerHTML='<img src="img/key.png" id"imgKey" style="width:50px; height:50px;" />';
+}
+function deleteKeyOnInventory(){
+	document.getElementById('imgKey').style.display='none';
+}
+
 function forcePauseGame(){
 clearInterval(principalTime);
 		console.log("intervalo parado");
@@ -451,6 +459,7 @@ function setNewLvl(){
 
 function createDivNextLvl(){
 	newDiv = document.createElement("div"); 
+	newDiv.setAttribute("class", "divNew");
 	buttonNext = document.createElement("button");
 	buttonNext.innerText = 'Haz Click';
 	buttonNext.onclick = function(){
@@ -458,15 +467,16 @@ function createDivNextLvl(){
 		newLvl();
 		document.getElementById('canvas').style.display = 'block';
 	};
-
-	var newContent = document.createTextNode("Has ganado!!"); 
-	newDiv.appendChild(newContent); 
+document.getElementById('divNew').innerHTML='<p id"pWin"> Has Ganado! <p/>';
+	/*var newContent = document.createTextNode("Has ganado!!"); 
+	newDiv.appendChild(newContent); */
 	newDiv.appendChild(buttonNext);  
 	document.body.appendChild(newDiv); 
 }
 
 function createDivDead(){
 	newDivDead=document.createElement("div"); 
+	newDivDead.setAttribute("class", "divNew");
 	buttonNext = document.createElement("button");
 	buttonNext.innerText = 'Haz Click';
 	buttonNext.onclick = function(){
@@ -474,9 +484,10 @@ function createDivDead(){
 		newLvl();
 		document.getElementById('canvas').style.display = 'block';
 	};
+document.getElementByClassName('newDivDead').innerHTML='<p id"pDead"> Has Murerto! <p/>';
 
-	var newContent = document.createTextNode("Has muerto!!"); 
-	newDivDead.appendChild(newContent); 
+/*	var newContent = document.createTextNode("Has muerto!!"); 
+	newDivDead.appendChild(newContent); */
 	newDivDead.appendChild(buttonNext);  
 	document.body.appendChild(newDivDead); 
 }

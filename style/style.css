@@ -1,7 +1,13 @@
+
+*{
+
+		font-family: 'Ranchers', cursive, Arial;
+}
 body{
 	overflow: hidden;
 	background: rgb(2,0,36);
     background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,121,41,1) 35%, rgba(0,212,255,1) 70%);
+
 }
 #ini{
 	width: 90%;
@@ -9,12 +15,84 @@ body{
 	margin:20% auto;	
 	text-align: center;
 	background-color: #2A23DB66;
+} 
+
+.divNew{
+		width: 60%;
+	border-radius: 50px;
+	margin:20% auto;	
+	text-align: center;
+	background-color: #2A23DB66;
+	
 }
+.divNew p{
+		font-size: 40px;
+		text-align: center;
+		display: block;
+}
+.divNew button{
+	width: 100px;
+	height: 80px;
+	border-radius: 20px;
+	background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,121,41,1) 35%, rgba(0,212,255,1) 70%);
 
 
+}
 #canvas{
 	display: none;
     width: 750px;
     height:500px;
     border: 2px solid red;
+    margin: auto;
 }
+#star{
+	color: #FF8C10FF;
+	font-weight: bold;
+	max-width: 70px;
+	position: absolute;
+	top: 7px;
+	left: 5px;
+	visibility: hidden;
+}
+#txtLvl1{
+	margin: 8px;
+	padding: 5px;
+	font-size: 25px;
+	position: absolute;
+	top: 0px;
+	left: 10px;
+}
+#imgStar{
+	width: 60px;
+	height: auto;
+	position: absolute;
+	top: 40px;
+	left: 5px;
+	
+}
+#txtLvl2{
+	 position: absolute;
+    top: 35px;
+    left: 30px;
+    color: black;
+    font-size: 25px;
+}
+#bag{
+	width: 50px;
+	height: auto;
+	position: absolute;
+	top: 120px;
+	left: 5px;
+	
+}
+#inventory{
+	width: 50px;
+	height: 50px;
+	position: absolute;
+	top: 200px;
+	left: 5px;
+	background-color: #80808080;
+	border-radius: 5px;
+}
+
+
