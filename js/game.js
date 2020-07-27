@@ -34,9 +34,11 @@ soundDead= new Howl({
 	loop: false
 });
 
+var iniPositionX=2;
+var iniPositionY=1;
 
-
-var stages = [[1,[
+var stages = [
+[1,[
 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 [0,2,2,0,0,0,2,2,2,2,0,0,2,2,0],
 [0,0,2,2,2,2,2,2,0,2,0,0,2,2,0],
@@ -48,7 +50,8 @@ var stages = [[1,[
 [0,2,2,3,0,0,2,0,0,1,2,2,2,2,0],
 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
 
-]], [2,[
+]], 
+[2,[
 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 [0,3,0,0,0,0,2,2,2,2,0,0,2,1,0],
 [0,2,2,2,2,2,2,2,0,2,0,0,2,2,0],
@@ -60,8 +63,34 @@ var stages = [[1,[
 [0,2,2,2,0,0,2,2,2,2,0,0,0,0,0],
 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
 
-]
-]];
+]],
+[3,[
+[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+[0,3,0,0,0,0,2,2,2,2,0,0,2,1,0],
+[0,2,2,2,2,2,2,2,0,2,0,0,2,2,0],
+[0,2,2,0,0,2,2,2,0,2,2,2,2,2,0],
+[0,0,2,2,2,0,2,2,0,0,2,2,2,0,0],
+[0,2,2,0,0,0,0,2,0,0,0,2,0,0,0],
+[0,2,0,2,2,2,2,0,2,0,0,2,2,2,0],
+[0,2,0,2,0,0,2,0,2,0,2,2,2,2,0],
+[0,2,2,2,0,0,2,2,2,2,0,0,0,0,0],
+[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+
+]],
+[4,[
+[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+[0,3,0,0,0,0,2,2,2,2,0,0,2,1,0],
+[0,2,2,2,2,2,2,2,0,2,0,0,2,2,0],
+[0,2,2,0,0,2,2,2,0,2,2,2,2,2,0],
+[0,0,2,2,2,0,2,2,0,0,2,2,2,0,0],
+[0,2,2,0,0,0,0,2,0,0,0,2,0,0,0],
+[0,2,0,2,2,2,2,0,2,0,0,2,2,2,0],
+[0,2,0,2,0,0,2,0,2,0,2,2,2,2,0],
+[0,2,2,2,0,0,2,2,2,2,0,0,0,0,0],
+[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+
+]]
+];
 
 var map = new Map(stages);
 
@@ -70,7 +99,9 @@ var stage;
 var newDiv;
 var buttonNext;
 
+var newDivDead;
 
+var principalTime;
 
 function startGame(){
 
@@ -93,7 +124,7 @@ function startGame(){
 function initialization(){
 
 
-	protagonist = new player();
+	
 	
 	document.addEventListener('keydown',function(keyb){
 	    //console.log(keyb.keyCode); know the Code of keys
@@ -117,7 +148,7 @@ function initialization(){
 	
 }
 function createEnemy(){
-	alert("debo crear"+(lvl+2)+" enemigos para nivel"+ lvl);
+	console.log("debo crear"+(lvl+2)+" enemigos para nivel"+ lvl);
 	var i=0;
 	for ( i = 0; i < (lvl+2); i++) {
 		//enemy.push(new bad(Math.floor(Math.random() * 8)+2,Math.floor(Math.random() * 13)+2));
@@ -125,8 +156,7 @@ function createEnemy(){
 		x=Math.floor(Math.random() * 13)+2;
 		enemyB=new bad(x,y);
 		var valorMapa=stage[y][x];
-		alert("enemigo creado en x: "+ x+" y: "+y+" el valor es :"+ valorMapa);
-
+	
 
 		if(stage[y][x]==2){
 			enemy.push(enemyB);
@@ -141,19 +171,24 @@ function createEnemy(){
 
 function killEnemy(){
 	enemy=[];
+	console.log("enemigos muertos, ahora"+enemy.length);
 }
-function newLvl(){
-	
-	setInterval(function(){
-		principal();
-	},1000/FPS);
 
+function newLvl(){
+	protagonist = new player(iniPositionX,iniPositionY);
 	createEnemy();
+
+	
+/*	setInterval(function(){
+		principal();
+	},1000/FPS);*/
+principalTime= setInterval(principal,1000/FPS);
+	
 
 }
 
 function principal(){
-
+console.log("Estoy iniciado");
 	deleteCanvas();
 	drawStage();
 	
@@ -172,14 +207,29 @@ function principal(){
 
 
 function selectStage(){
+	switch(lvl){
+		case 1:
+		stage=map.get(1);
+		break;
+		case 2:
+		stage=map.get(2);
+		break;
+		case 3:
+		stage=map.get(3);
+		break;
+		case 4:
+		stage=map.get(4);
+		break;
 
-	if(lvl==1){
+	}
+
+/*	if(lvl==1){
 		stage=map.get(1);
 
 	}else if(lvl==2){
 		stage=map.get(2);
 
-	}
+	}*/
 	return stage;
 }
 
@@ -268,10 +318,10 @@ var bad=function(x,y){
 	}
 }
 
-var player = function(){
+var player = function(x,y){
 	stage=selectStage();
-	this.x=2;
-	this.y=1;
+	this.x=x;
+	this.y=y;
 	this.key=false;
 
 	this.draw=function(){
@@ -317,9 +367,13 @@ var player = function(){
 	}
 	this.victory= function(){
 		soundWin.play();
+		clearInterval(principalTime);
 		document.getElementById('canvas').style.display = 'none';
 		deleteCanvas();
+		killEnemy();
 		lvl++;
+		iniPositionX=protagonist.x;
+		iniPositionY=protagonist.y;
 		createDivNextLvl();
 		newLvl();
 		
@@ -327,9 +381,13 @@ var player = function(){
 
 	this.dead= function(){
 		soundDead.play();
-		alert("Has perdido!!");
-killEnemy();
-		newLvl();
+		clearInterval(principalTime);
+		console.log("intervalo parado");
+		killEnemy();
+		this.key=false;
+		document.getElementById('canvas').style.display = 'none';
+        createDivDead();
+		
 	}
 
 	this.objectsLogic = function(){
@@ -379,7 +437,21 @@ function createDivNextLvl(){
 	document.body.appendChild(newDiv); 
 }
 
+function createDivDead(){
+ newDivDead=document.createElement("div"); 
+ buttonNext = document.createElement("button");
+	buttonNext.innerText = 'Haz Click';
+	buttonNext.onclick = function(){
+		newDivDead.remove();
+		newLvl();
+		document.getElementById('canvas').style.display = 'block';
+	};
 
+	var newContent = document.createTextNode("Has muerto!!"); 
+	newDivDead.appendChild(newContent); 
+	newDivDead.appendChild(buttonNext);  
+	document.body.appendChild(newDivDead); 
+}
 
 
 
