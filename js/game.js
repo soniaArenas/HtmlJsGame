@@ -147,6 +147,23 @@ function initialization(){
 	newLvl();
 	
 }
+
+function newLvl(){
+	protagonist = new player(iniPositionX,iniPositionY);
+	createEnemy();
+
+	
+/*	setInterval(function(){
+		principal();
+	},1000/FPS);*/
+	setKey();
+	principalTime= setInterval(principal,1000/FPS);
+	
+
+}
+
+
+
 function createEnemy(){
 	console.log("debo crear"+(lvl+2)+" enemigos para nivel"+ lvl);
 	var i=0;
@@ -156,7 +173,7 @@ function createEnemy(){
 		x=Math.floor(Math.random() * 13)+2;
 		enemyB=new bad(x,y);
 		var valorMapa=stage[y][x];
-	
+
 
 		if(stage[y][x]==2){
 			enemy.push(enemyB);
@@ -169,26 +186,34 @@ function createEnemy(){
 
 }
 
+
 function killEnemy(){
 	enemy=[];
 	console.log("enemigos muertos, ahora"+enemy.length);
 }
 
-function newLvl(){
-	protagonist = new player(iniPositionX,iniPositionY);
-	createEnemy();
 
-	
-/*	setInterval(function(){
-		principal();
-	},1000/FPS);*/
-principalTime= setInterval(principal,1000/FPS);
-	
+function setKey(){
+	switch(lvl){
+		case 1:
+		stage[8][3]=3;
+		break;
+		case 2:
+		stage[1][1]=3;
+		break;
+		case 3:
+		stage[1][1]=3;
+		break;
+		case 4:
+		stage[1][1]=3;
+		break;
 
+	}
 }
 
+
 function principal(){
-console.log("Estoy iniciado");
+	console.log("Estoy iniciado");
 	deleteCanvas();
 	drawStage();
 	
@@ -367,26 +392,15 @@ var player = function(x,y){
 	}
 	this.victory= function(){
 		soundWin.play();
-		clearInterval(principalTime);
-		document.getElementById('canvas').style.display = 'none';
-		deleteCanvas();
-		killEnemy();
-		lvl++;
-		iniPositionX=protagonist.x;
-		iniPositionY=protagonist.y;
-		createDivNextLvl();
-		newLvl();
+		forcePauseGame();
+		setNewLvl();
 		
 	}
 
 	this.dead= function(){
 		soundDead.play();
-		clearInterval(principalTime);
-		console.log("intervalo parado");
-		killEnemy();
-		this.key=false;
-		document.getElementById('canvas').style.display = 'none';
-        createDivDead();
+		forcePauseGame();
+		createDivDead();
 		
 	}
 
@@ -420,7 +434,20 @@ var player = function(x,y){
 
 }
 
+function forcePauseGame(){
+clearInterval(principalTime);
+		console.log("intervalo parado");
+		killEnemy();
+		protagonist.key=false;
+		document.getElementById('canvas').style.display = 'none';
+}
 
+function setNewLvl(){
+	lvl++;
+	iniPositionX=protagonist.x;
+	iniPositionY=protagonist.y;
+	createDivNextLvl();
+}
 
 function createDivNextLvl(){
 	newDiv = document.createElement("div"); 
@@ -428,6 +455,7 @@ function createDivNextLvl(){
 	buttonNext.innerText = 'Haz Click';
 	buttonNext.onclick = function(){
 		newDiv.remove();
+		newLvl();
 		document.getElementById('canvas').style.display = 'block';
 	};
 
@@ -438,8 +466,8 @@ function createDivNextLvl(){
 }
 
 function createDivDead(){
- newDivDead=document.createElement("div"); 
- buttonNext = document.createElement("button");
+	newDivDead=document.createElement("div"); 
+	buttonNext = document.createElement("button");
 	buttonNext.innerText = 'Haz Click';
 	buttonNext.onclick = function(){
 		newDivDead.remove();
